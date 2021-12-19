@@ -14,4 +14,4 @@ param(
 )
 
 . $PsScriptRoot\Tasks\Build.Tasks.ps1
-
+. $PSScriptRoot\tasks\Testdata.Tasks.ps1

@@ -40,6 +40,20 @@
             "problemMatcher": []
         },
         {
+            "label": "Create Testdata",
+            "group": "build",
+            "type": "shell",
+            "command": "Invoke-Build",
+            "args": [
+                "Testdata.Create"
+            ],
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "echo": false,
+                "showReuseMessage": false
+            }
+        },
+        {
             "label": "Clean",
             "type": "shell",
             "command": "Invoke-Build Clean",
@@ -70,7 +84,7 @@
                 "echo": false,
                 "showReuseMessage": false
             },
-            "dependsOn": "Build"
+            "dependsOn": ["Build", "Create Testdata"]
         },
     ]
 }
