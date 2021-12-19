@@ -9,3 +9,7 @@ Module to generate [Mermaid](https://mermaid-js.github.io) ER diagrams for SQL S
 ```powershell
 Invoke-Build Install
 ```
+
+## Usage
+
+See [the documentation](./Docs) for description and examples.
