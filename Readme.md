@@ -1,5 +1,7 @@
 # PsSqlMermaid
 
+Module to generate [Mermaid](https://mermaid-js.github.io) ER diagrams for SQL Server databases.
+
 ## Installation
 
 ### From Source
