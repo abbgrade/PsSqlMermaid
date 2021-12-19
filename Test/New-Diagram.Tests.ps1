@@ -21,11 +21,14 @@ Describe 'New-SqlMermaidDiagram' {
         It 'Creates a diagram' {
             [string] $diagram = $Script:Model | New-SqlMermaidDiagram -ErrorAction Stop
 
+            # $diagram | Out-File 'er.mmd'
+
             $diagram | Should -BeLike 'erDiagram*'
 
             $Script:Model | Get-DacTable | ForEach-Object {
-                $containsTable = $diagram.Contains( $_.Name.ToString() )
-                $containsTable | Should -Be $true -Because $_.Name.ToString()
+                $schema, $table = $_.Name.Parts
+                $diagram | Should -Match $table
+                $diagram | Should -Not -Match "\[$table\]"
             }
         }
 
@@ -33,6 +36,9 @@ Describe 'New-SqlMermaidDiagram' {
 
             It 'Creates a valid diagram' {
                 $svg = $Script:Model | New-SqlMermaidDiagram | Invoke-MermaidCommand
+
+                # $svg | Out-File 'er.svg'
+
                 $svg | Should -Not -BeNullOrEmpty
             }
         }

@@ -6,7 +6,9 @@ function New-Diagram {
             ValueFromPipeline
         )]
         # [Microsoft.SqlServer.Dac.Model.TSqlModel]
-        $DacModel
+        $DacModel,
+
+        $SchemaSeparator = '-'
     )
 
     process {
@@ -16,7 +18,15 @@ function New-Diagram {
 
         $DacModel | Get-DacForeignKey | ForEach-Object {
             $sourceTable, $targetTable = $_.GetReferenced() | Where-Object { $_.ObjectType.Name -eq 'Table' }
-            $lines += "    $( $sourceTable.Name ) ||--o{ $( $targetTable.Name ) : $( $_.Name )"
+            $sourceSchemaName, $sourceTableName = $sourceTable.Name.Parts
+            $targetSchemaName, $targetTableName = $targetTable.Name.Parts
+            $keySchemaName, $keyName = $_.Name.Parts
+
+            $relationString = 'o|--o{'
+            $sourceTableString = "$sourceSchemaName$SchemaSeparator$sourceTableName"
+            $targetTableString = "$targetSchemaName$SchemaSeparator$targetTableName"
+
+            $lines += "    $sourceTableString $relationString $targetTableString : $keyName"
             $includedTables += $sourceTable, $targetTable | ForEach-Object { $_.Name.ToString() }
         }
 
@@ -25,7 +35,9 @@ function New-Diagram {
         $DacModel | Get-DacTable | Where-Object {
             -Not ( $includedTables -contains $_.Name.ToString() )
         } | ForEach-Object {
-            $lines += "    $( $_.Name )"
+            $schemaName, $tableName = $_.Name.Parts
+            $tableString = "$schemaName$SchemaSeparator$tableName"
+            $lines += "    $tableString"
         }
 
         $lines -join "`r`n" | Write-Output
