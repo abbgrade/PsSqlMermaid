@@ -34,7 +34,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-latest] # , ubuntu-latest
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -46,6 +46,12 @@ jobs:
         with:
           path: publish
           name: ${{ matrix.os }}-build
+
+      - name: Install test dependencies
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module PsDockerMermaid -ErrorAction Stop
 
       - name: Run tests
         shell: pwsh
