@@ -12,16 +12,16 @@ task Testdata.DacPac.WWI.Clean -If { $SqlServerSamplesDirectory.Exists } -Jobs {
 task Testdata.DacPac.WWI.AddSolution -If { -Not $SqlServerSamplesDirectory.Exists } -Jobs {
     New-Item $SqlServerSamplesDirectory -ItemType Directory
     Push-Location $SqlServerSamplesDirectory
-    git init
-    git remote add origin -f https://github.com/microsoft/sql-server-samples.git
-    git config core.sparseCheckout true
+    exec { git init }
+    exec { git remote add origin -f https://github.com/microsoft/sql-server-samples.git }
+    exec { git config core.sparseCheckout true }
     Set-Content .git/info/sparse-checkout $WwiSsdtRelativePath
     Pop-Location
 }
 
 task Testdata.DacPac.WWI.CheckoutSolution -If { -Not $WwiSsdtDirectory.Exists } -Jobs Testdata.DacPac.WWI.AddSolution, {
     Push-Location $SqlServerSamplesDirectory
-    git pull --depth=1 origin master
+    exec { git pull --depth=1 origin master }
     Pop-Location
 }
 
