@@ -3,11 +3,11 @@
 [string] $WwiSsdtRelativePath = 'samples/databases/wide-world-importers/wwi-ssdt/wwi-ssdt'
 [System.IO.DirectoryInfo] $WwiSsdtDirectory = Join-Path $SqlServerSamplesDirectory $WwiSsdtRelativePath
 
-task Testdata.DacPac.WWI.Clean -If ( $SqlServerSamplesDirectory.Exists ) -Jobs {
+task Testdata.DacPac.WWI.Clean -If { $SqlServerSamplesDirectory.Exists } -Jobs {
     Remove-Item $SqlServerSamplesDirectory -Recurse -Force
 }
 
-task Testdata.DacPac.WWI.AddSolution -If ( -Not $SqlServerSamplesDirectory.Exists ) -Jobs {
+task Testdata.DacPac.WWI.AddSolution -If { -Not $SqlServerSamplesDirectory.Exists } -Jobs {
     New-Item $SqlServerSamplesDirectory -ItemType Directory
     Push-Location $SqlServerSamplesDirectory
     git init
@@ -17,7 +17,7 @@ task Testdata.DacPac.WWI.AddSolution -If ( -Not $SqlServerSamplesDirectory.Exist
     Pop-Location
 }
 
-task Testdata.DacPac.WWI.CheckoutSolution -If ( -Not $WwiSsdtDirectory.Exists ) -Jobs Testdata.DacPac.WWI.AddSolution, {
+task Testdata.DacPac.WWI.CheckoutSolution -If { -Not $WwiSsdtDirectory.Exists } -Jobs Testdata.DacPac.WWI.AddSolution, {
     Push-Location $SqlServerSamplesDirectory
     git pull --depth=1 origin master
     Pop-Location
