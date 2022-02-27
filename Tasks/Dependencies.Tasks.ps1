@@ -3,5 +3,5 @@ task InstallBuildDependencies -Jobs {
 }
 
 task InstallTestDependencies -Jobs {
-    Install-Module PsDockerMermaid -ErrorAction Stop
+    Install-Module PsDockerMermaid, PsDac -ErrorAction Stop
 }
