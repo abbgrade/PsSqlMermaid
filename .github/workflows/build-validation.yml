@@ -6,4 +6,4 @@ on:
 
 jobs:
   build-validation:
-    uses: abbgrade/PsBuildTasks/blob/main/GitHub/build-validation.yml
+    uses: abbgrade/PsBuildTasks/blob/main/GitHub/build-validation.yml@d3f59f383b143ffae4b81f4ad3859c9eaca1364e
