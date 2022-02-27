@@ -21,7 +21,7 @@ task Testdata.DacPac.WWI.AddSolution -If { -Not $SqlServerSamplesDirectory.Exist
 
 task Testdata.DacPac.WWI.CheckoutSolution -If { -Not $WwiSsdtDirectory.Exists } -Jobs Testdata.DacPac.WWI.AddSolution, {
     Push-Location $SqlServerSamplesDirectory
-    exec { git pull --depth=1 origin master }
+    exec { git pull --depth=1 origin master --verbose }
     Pop-Location
 }
 
