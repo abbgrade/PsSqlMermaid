@@ -15,7 +15,7 @@ Describe 'New-SqlMermaidDiagram' {
     Context 'DacPac' -Skip:( -Not $Script:DacPacFile.Exists ) {
 
         BeforeAll {
-            $Script:Model = Import-DacModel $Script:DacPacFile
+            $Script:Model = Import-DacModel -Path $Script:DacPacFile
         }
 
         It 'Creates a diagram' {
