@@ -27,8 +27,9 @@ param(
 
 $ModuleName = 'PsSqlMermaid'
 
+. $PSScriptRoot\Tasks\Dependencies.Tasks.ps1
 . $PsScriptRoot\Tasks\Build.Tasks.ps1
-. $PSScriptRoot\tasks\Testdata.Tasks.ps1
+. $PSScriptRoot\Tasks\Testdata.Tasks.ps1
 
 # Synopsis: Default task.
 task . Build
