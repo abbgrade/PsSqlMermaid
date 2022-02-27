@@ -1,0 +1,12 @@
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  release:
+    uses: abbgrade/PsBuildTasks/.github/workflows/release-windows.yml@64fb6376123fdc8c24b66a7e93dd1800f0571983
+    with:
+      module-name: PsSqlMermaid
+    secrets:
+      ps-gallery-key: ${{ secrets.PS_GALLERY_KEY }}
