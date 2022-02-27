@@ -39,3 +39,9 @@ task UpdateBuildTasks {
 		-Uri 'https://raw.githubusercontent.com/abbgrade/PsBuildTasks/main/Powershell/Build.Tasks.ps1' `
 		-OutFile "$PSScriptRoot\Tasks\Build.Tasks.ps1"
 }
+
+task UpdateValidationWorkflow {
+    Invoke-WebRequest `
+        -Uri 'https://raw.githubusercontent.com/abbgrade/PsBuildTasks/main/GitHub/build-validation.yml' `
+        -OutFile "$PSScriptRoot\.github\workflows\build-validation.yml"
+}
