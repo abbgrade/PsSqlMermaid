@@ -13,3 +13,9 @@ Invoke-Build Install
 ## Usage
 
 See [the documentation](./Docs) for description and examples.
+
+## Changelog
+
+### 0.1.0
+
+- Added `New-SqlMermaidDiagram` command.
