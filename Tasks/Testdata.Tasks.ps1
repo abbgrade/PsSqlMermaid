@@ -2,6 +2,8 @@
 [System.IO.DirectoryInfo] $SqlServerSamplesDirectory = "$PSScriptRoot\..\Test\sql-server-samples"
 [string] $WwiSsdtRelativePath = 'samples/databases/wide-world-importers/wwi-ssdt/wwi-ssdt'
 [System.IO.DirectoryInfo] $WwiSsdtDirectory = Join-Path $SqlServerSamplesDirectory $WwiSsdtRelativePath
+[System.IO.FileInfo] $WideWorldImportersProject = Join-Path $SqlServerSamplesDirectory $WwiSsdtRelativePath "WideWorldImporters.sqlproj"
+[System.IO.FileInfo] $WideWorldImportersDacPac = Join-Path $SqlServerSamplesDirectory $WwiSsdtRelativePath "bin\Debug\WideWorldImporters.dacpac"
 
 task Testdata.DacPac.WWI.Clean -If { $SqlServerSamplesDirectory.Exists } -Jobs {
     Remove-Item $SqlServerSamplesDirectory -Recurse -Force
@@ -29,9 +31,9 @@ task Testdata.DacPac.WWI.Create -Jobs Testdata.DacPac.WWI.CheckoutSolution, {
 
     Import-Module Invoke-MsBuild
 
-    Invoke-MsBuild "$SqlServerSamplesDirectory\samples\databases\wide-world-importers\wwi-ssdt\wwi-ssdt\WideWorldImporters.sqlproj"
+    Invoke-MsBuild $WideWorldImportersProject
 
-    assert ( Test-Path "$SqlServerSamplesDirectory\samples\databases\wide-world-importers\wwi-ssdt\wwi-ssdt\bin\Debug\WideWorldImporters.dacpac" )
+    assert ( Test-Path $WideWorldImportersDacPac )
 }
 
 task Testdata.Create -Jobs Testdata.DacPac.WWI.Create
