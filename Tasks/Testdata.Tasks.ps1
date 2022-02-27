@@ -10,7 +10,7 @@ task Testdata.DacPac.WWI.Clean -If { $SqlServerSamplesDirectory.Exists } -Jobs {
 }
 
 task Testdata.DacPac.WWI.AddSolution -If { -Not $SqlServerSamplesDirectory.Exists } -Jobs {
-    New-Item $SqlServerSamplesDirectory -ItemType Directory
+    New-Item $SqlServerSamplesDirectory -ItemType Directory -ErrorAction Continue
 }
 
 task Testdata.DacPac.WWI.InitSolution -If { -Not ( Test-Path "$SqlServerSamplesDirectory\.git" ) } -Jobs Testdata.DacPac.WWI.AddSolution, {
