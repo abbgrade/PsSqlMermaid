@@ -8,7 +8,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [windows-latest] # , ubuntu-latest
+        os: [windows-latest, ubuntu-latest]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -19,7 +19,8 @@ jobs:
         shell: pwsh
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
-          Install-Module InvokeBuild, platyPs, PsDocker -ErrorAction Stop
+          Install-Module InvokeBuild -ErrorAction Stop
+          Invoke-Build InstallBuildDependencies
 
       - name: Create build
         shell: pwsh
@@ -34,7 +35,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        os: [windows-latest] # , ubuntu-latest
+        os: [windows-latest, ubuntu-latest]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -51,7 +52,8 @@ jobs:
         shell: pwsh
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
-          Install-Module PsDockerMermaid -ErrorAction Stop
+          Install-Module InvokeBuild -ErrorAction Stop
+          Invoke-Build InstallTestDependencies
 
       - name: Run tests
         shell: pwsh
