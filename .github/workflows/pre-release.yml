@@ -5,7 +5,7 @@ on:
 
 jobs:
   pre-release:
-    uses: abbgrade/PsBuildTasks/.github/workflows/pre-release-windows.yml@7e804f1bb8130bb04e7657e1c3787e7df30a4110
+    uses: abbgrade/PsBuildTasks/.github/workflows/pre-release-windows.yml@0e4c22414fdb3ec06288a3e2668a9b2e7d4a41dc
     with:
       module-name: PsSqlMermaid
     secrets:
