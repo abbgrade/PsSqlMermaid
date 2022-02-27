@@ -2,7 +2,7 @@ requires ModuleName
 
 [System.IO.DirectoryInfo] $SourceDirectory = "$PsScriptRoot\..\Source"
 [System.IO.DirectoryInfo] $SourceManifest = "$SourceDirectory\$ModuleName.psd1"
-[System.IO.DirectoryInfo] $PublishDirectory = "$PsScriptRoot\..\Publish"
+[System.IO.DirectoryInfo] $PublishDirectory = "$PsScriptRoot\..\publish"
 [System.IO.DirectoryInfo] $DocumentationDirectory = "$PsScriptRoot\..\Docs"
 [System.IO.DirectoryInfo] $ModulePublishDirectory = "$PublishDirectory\$ModuleName"
 
