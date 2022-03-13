@@ -38,16 +38,21 @@ function New-Diagram {
 
         $DacModel | Get-DacForeignKey | ForEach-Object {
             $sourceTable, $targetTable = $_.GetReferenced() | Where-Object { $_.ObjectType.Name -eq 'Table' }
-            $sourceSchemaName, $sourceTableName = $sourceTable.Name.Parts
-            $targetSchemaName, $targetTableName = $targetTable.Name.Parts
-            $keySchemaName, $keyName = $_.Name.Parts
 
-            $relationString = 'o|--o{'
-            $sourceTableString = "$sourceSchemaName$SchemaSeparator$sourceTableName"
-            $targetTableString = "$targetSchemaName$SchemaSeparator$targetTableName"
+            if ( $targetTable ) {
+                $sourceSchemaName, $sourceTableName = $sourceTable.Name.Parts
+                $targetSchemaName, $targetTableName = $targetTable.Name.Parts
+                $keySchemaName, $keyName = $_.Name.Parts
 
-            $lines += "    $sourceTableString $relationString $targetTableString : $keyName"
-            $includedTables += $sourceTable, $targetTable | ForEach-Object { $_.Name.ToString() }
+                $relationString = 'o|--o{'
+                $sourceTableString = "$sourceSchemaName$SchemaSeparator$sourceTableName"
+                $targetTableString = "$targetSchemaName$SchemaSeparator$targetTableName"
+
+                $lines += "    $sourceTableString $relationString $targetTableString : $keyName"
+                $includedTables += $sourceTable, $targetTable | ForEach-Object { $_.Name.ToString() }
+            } else {
+                Write-Verbose "Exclude $( $_.Name ). Foreign table was not found."
+            }
         }
 
         $includedTables = $includedTables | Select-Object -Unique
