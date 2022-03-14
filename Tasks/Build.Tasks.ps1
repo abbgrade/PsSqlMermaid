@@ -1,44 +1,68 @@
-[System.IO.DirectoryInfo] $sourcePath = "$PsScriptRoot\..\Source"
-[System.IO.DirectoryInfo] $buildPath = "$PsScriptRoot\..\Build"
-[System.IO.DirectoryInfo] $docPath = "$PsScriptRoot\..\Docs"
-[System.IO.FileInfo] $global:Manifest = "$sourcePath\PsSqlMermaid.psd1"
-[System.IO.DirectoryInfo] $moduleBuildPath = "$buildPath\PsSqlMermaid"
+requires ModuleName
 
-task Clean {
-	Remove-Item $buildPath -Recurse -ErrorAction Continue
+[System.IO.DirectoryInfo] $SourceDirectory = "$PsScriptRoot\..\Source"
+[System.IO.DirectoryInfo] $SourceManifest = "$SourceDirectory\$ModuleName.psd1"
+[System.IO.DirectoryInfo] $PublishDirectory = "$PsScriptRoot\..\publish"
+[System.IO.DirectoryInfo] $DocumentationDirectory = "$PsScriptRoot\..\Docs"
+[System.IO.DirectoryInfo] $ModulePublishDirectory = "$PublishDirectory\$ModuleName"
+
+# Synopsis: Remove all temporary files.
+task Clean -Jobs {
+	remove $PublishDirectory, $DocumentationDirectory
 }
 
-task Build -Jobs Clean, CopyArtefacts
-
-task PrepareBuildPath -If ( -Not ( Test-Path $buildPath )) -Jobs {
-	New-Item -Path $buildPath -ItemType Directory | Out-Null
+# Synopsis: Import the module.
+task Import -Jobs {
+    Import-Module $SourceManifest -Force
 }
 
-task CopyArtefacts -Jobs PrepareBuildPath, {
-	Copy-Item -Path $sourcePath -Destination $moduleBuildPath -Recurse
+# Synopsis: Initialize the documentation directory.
+task Doc.Init.Directory -If { $DocumentationDirectory.Exists -eq $false} -Jobs {
+	New-Item $DocumentationDirectory -ItemType Directory
 }
 
-task UpdateDocs {
-	Import-Module $global:Manifest.FullName -Force
-	Remove-Item -Path $docPath/*
-	New-MarkdownHelp -Module PsSqlMermaid -OutputFolder $docPath
-	# Update-MarkdownHelp -Path $docPath -AlphabeticParamsOrder -Force
+# Synopsis: Initialize the documentation.
+task Doc.Init -Jobs Import, Doc.Init.Directory, {
+    New-MarkdownHelp -Module $ModuleName -OutputFolder $DocumentationDirectory -Force:$ForceDocInit -ErrorAction Continue
 }
+
+# Synopsis: Update the markdown documentation.
+task Doc.Update -Jobs Import, Doc.Init, {
+    Update-MarkdownHelp -Path $DocumentationDirectory
+}
+
+task PreparePublishDirectory -If ( -Not ( Test-Path $PublishDirectory )) -Jobs {
+	New-Item -Path $PublishDirectory -ItemType Directory | Out-Null
+}
+
+# Synopsis: Set the prerelease in the manifest based on the build number.
+task SetPrerelease -If $BuildNumber {
+	$Global:PreRelease = "alpha$( '{0:d4}' -f $BuildNumber )"
+	Update-ModuleManifest -Path $Global:Manifest -Prerelease $Global:PreRelease
+}
+
+# Synopsis: Build the module.
+task Build -Jobs Clean, Doc.Update, PreparePublishDirectory, {
+	Copy-Item -Path $SourceDirectory -Destination $ModulePublishDirectory -Recurse
+    [System.IO.FileInfo] $Global:Manifest = "$ModulePublishDirectory\$ModuleName.psd1"
+}, SetPrerelease
 
 # Synopsis: Install the module.
 task Install -Jobs Build, {
-    $info = Import-PowerShellDataFile $global:Manifest.FullName
+    $info = Import-PowerShellDataFile $Global:Manifest
     $version = ([System.Version] $info.ModuleVersion)
-    $name = $global:Manifest.BaseName
     $defaultModulePath = $env:PsModulePath -split ';' | Select-Object -First 1
-	Write-Verbose "install $name $version to $defaultModulePath"
-    $installPath = Join-Path $defaultModulePath $name $version.ToString()
+	Write-Verbose "install $ModuleName $version to $defaultModulePath"
+    $installPath = Join-Path $defaultModulePath $ModuleName $version.ToString()
     New-Item -Type Directory $installPath -Force | Out-Null
-    Get-ChildItem $global:Manifest.Directory | Copy-Item -Destination $installPath -Recurse -Force
+    Get-ChildItem $Global:Manifest.Directory | Copy-Item -Destination $installPath -Recurse -Force
 }
 
 # Synopsis: Publish the module to PSGallery.
 task Publish -Jobs Clean, Build, {
-	# Publish-Module -Name PsSqlMermaid -NuGetApiKey $NuGetApiKey
-    Publish-PSResource -Path $buildPath\PsSqlMermaid -APIKey $NuGetApiKey
+	if ( -Not $Global:PreRelease ) {
+		assert ( $Configuration -eq 'Release' )
+		Update-ModuleManifest -Path $Global:Manifest -Prerelease ''
+	}
+	Publish-Module -Path $Global:Manifest.Directory -NuGetApiKey $NuGetApiKey -Force:$ForcePublish
 }
