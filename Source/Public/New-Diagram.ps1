@@ -31,6 +31,15 @@ function New-Diagram {
         $SchemaSeparator = '-'
     )
 
+    begin {
+        $relationStrings = @{
+            ZeroOrOne  = '|o', 'o|'
+            ExactlyOne = '||', '||'
+            ZeroOrMore = '}o', 'o{'
+            OneOrMore  = '}|', '|{'
+        }
+    }
+
     process {
         $lines = @('erDiagram')
 
@@ -44,13 +53,15 @@ function New-Diagram {
                 $targetSchemaName, $targetTableName = $targetTable.Name.Parts
                 $keySchemaName, $keyName = $_.Name.Parts
 
-                $relationString = 'o|--o{'
+
+                $relationString = $relationStrings.ZeroOrMore[0] + '--' + $relationStrings.ZeroOrOne[1]
                 $sourceTableString = "$sourceSchemaName$SchemaSeparator$sourceTableName"
                 $targetTableString = "$targetSchemaName$SchemaSeparator$targetTableName"
 
                 $lines += "    $sourceTableString $relationString $targetTableString : $keyName"
                 $includedTables += $sourceTable, $targetTable | ForEach-Object { $_.Name.ToString() }
-            } else {
+            }
+            else {
                 Write-Verbose "Exclude $( $_.Name ). Foreign table was not found."
             }
         }
