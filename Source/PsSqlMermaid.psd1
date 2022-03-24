@@ -98,10 +98,10 @@ PrivateData = @{
         Tags = 'mermaid','sql','dac'
 
         # A URL to the license for this module.
-        LicenseUri = 'https://github.com/abbgrade/PsDac/blob/main/LICENSE'
+        LicenseUri = 'https://github.com/abbgrade/PsSqlMermaid/blob/main/LICENSE'
 
         # A URL to the main website for this project.
-        ProjectUri = 'https://github.com/abbgrade/PsDac'
+        ProjectUri = 'https://github.com/abbgrade/PsSqlMermaid'
 
         # A URL to an icon representing this module.
         # IconUri = ''
