@@ -7,7 +7,7 @@ Describe 'New-SqlMermaidDiagram' {
     }
 
     BeforeAll {
-        Import-Module $PSScriptRoot\..\Source\PsSqlMermaid.psd1 -Force -ErrorAction Stop
+        Import-Module $PSScriptRoot\..\src\PsSqlMermaid.psd1 -Force -ErrorAction Stop
         Import-Module PsDac -ErrorAction Stop
     }
 
