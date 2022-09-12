@@ -51,7 +51,7 @@ Description = 'Module to generate mermaid ER diagrams for SQL Server databases.'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-# RequiredModules = @()
+RequiredModules = @('PsMermaidTools')
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()

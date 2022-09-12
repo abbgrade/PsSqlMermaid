@@ -1,46 +1,44 @@
 #Requires -Modules @{ ModuleName='Pester'; ModuleVersion='5.0.0' }
 
-Describe 'New-SqlMermaidDiagram' {
+[CmdletBinding()]
+param (
+    [System.IO.FileInfo] $WwiDacPacFile = "$PsScriptRoot\sql-server-samples\samples\databases\wide-world-importers\wwi-ssdt\wwi-ssdt\bin\Debug\WideWorldImporters.dacpac",
+    [System.IO.FileInfo] $MpsSalesDacPacFile = "$PSScriptRoot\multi-project-sample\sales\bin\Debug\sales.dacpac"
+)
 
-    BeforeDiscovery {
-        $Script:PsDockerMermaid = Import-Module PsDockerMermaid -PassThru -ErrorAction Continue
-    }
+Describe New-Diagram {
 
     BeforeAll {
         Import-Module $PSScriptRoot\..\Source\PsSqlMermaid.psd1 -Force -ErrorAction Stop
         Import-Module PsDac -ErrorAction Stop
     }
 
-    Context 'wide-world-importers' {
+    Context wide-world-importers {
 
-        BeforeDiscovery {
-            [System.IO.FileInfo] $Script:WwiDacPacFile = "$PsScriptRoot\sql-server-samples\samples\databases\wide-world-importers\wwi-ssdt\wwi-ssdt\bin\Debug\WideWorldImporters.dacpac"
-        }
-
-        Context 'DacPac' -Skip:( -Not $Script:WwiDacPacFile.Exists ) {
+        Context DacPac -Skip:( -Not $WwiDacPacFile.Exists ) {
 
             BeforeAll {
-                $Script:WwiModel = Import-DacModel -Path $Script:WwiDacPacFile
+                $WwiModel = Import-DacModel -Path $WwiDacPacFile
             }
 
-            It 'Creates a diagram' {
-                [string] $diagram = $Script:WwiModel | New-SqlMermaidDiagram -ErrorAction Stop
+            It Creates-a-diagram {
+                [string] $diagram = $WwiModel | New-SqlMermaidDiagram -ErrorAction Stop
 
-                # $diagram | Out-File 'er.mmd'
+                # $diagram | Out-File 'wwi-er.mmd'
 
                 $diagram | Should -BeLike 'erDiagram*'
 
-                $Script:WwiModel | Get-DacTable | ForEach-Object {
+                $WwiModel | Get-DacTable | ForEach-Object {
                     $schema, $table = $_.Name.Parts
                     $diagram | Should -Match $table
                     $diagram | Should -Not -Match "\[$table\]"
                 }
             }
 
-            Context 'Mermaid CLI' -Skip:( -Not $Script:PsDockerMermaid ) {
+            Context Mermaid-CLI -Skip:( -Not $PsDockerMermaid ) {
 
-                It 'Creates a valid diagram' {
-                    $svg = $Script:WwiModel | New-SqlMermaidDiagram | Invoke-MermaidCommand
+                It Creates-a-valid-diagram {
+                    $svg = $WwiModel | New-SqlMermaidDiagram | Invoke-MermaidCommand
 
                     # $svg | Out-File 'er.svg'
 
@@ -52,38 +50,34 @@ Describe 'New-SqlMermaidDiagram' {
 
     }
 
-    Context 'multi-project' {
+    Context multi-project {
 
-        Context 'sales' {
+        Context sales {
 
-            BeforeDiscovery {
-                [System.IO.FileInfo] $Script:MpsSalesDacPacFile = "$PSScriptRoot\multi-project-sample\sales\bin\Debug\sales.dacpac"
-            }
-
-            Context 'DacPac' -Skip:( -Not $Script:MpsSalesDacPacFile.Exists ) {
+            Context DacPac -Skip:( -Not $MpsSalesDacPacFile.Exists ) {
 
                 BeforeAll {
-                    $Script:MpsSalesModel = Import-DacModel -Path $Script:MpsSalesDacPacFile
+                    $MpsSalesModel = Import-DacModel -Path $MpsSalesDacPacFile
                 }
 
-                It 'Creates a diagram' {
-                    [string] $diagram = $Script:MpsSalesModel | New-SqlMermaidDiagram -ErrorAction Stop
+                It Creates-a-diagram {
+                    [string] $diagram = $MpsSalesModel | New-SqlMermaidDiagram -ErrorAction Stop
 
-                    # $diagram | Out-File 'er.mmd'
+                    # $diagram | Out-File 'mp-er.mmd'
 
                     $diagram | Should -BeLike 'erDiagram*'
 
-                    $Script:MpsSalesModel | Get-DacTable | ForEach-Object {
+                    $MpsSalesModel | Get-DacTable | ForEach-Object {
                         $schema, $table = $_.Name.Parts
                         $diagram | Should -Match $table
                         $diagram | Should -Not -Match "\[$table\]"
                     }
                 }
 
-                Context 'Mermaid CLI' -Skip:( -Not $Script:PsDockerMermaid ) {
+                Context Mermaid-CLI -Skip:( -Not $PsDockerMermaid ) {
 
                     It 'Creates a valid diagram' {
-                        $svg = $Script:MpsSalesModel | New-SqlMermaidDiagram | Invoke-MermaidCommand
+                        $svg = $MpsSalesModel | New-SqlMermaidDiagram | Invoke-MermaidCommand
 
                         # $svg | Out-File 'er.svg'
 
