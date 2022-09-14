@@ -2,8 +2,8 @@
 
 [CmdletBinding()]
 param (
-    [System.IO.FileInfo] $WwiDacPacFile = "$PsScriptRoot\sql-server-samples\samples\databases\wide-world-importers\wwi-ssdt\wwi-ssdt\bin\Debug\WideWorldImporters.dacpac",
-    [System.IO.FileInfo] $MpsSalesDacPacFile = "$PSScriptRoot\multi-project-sample\sales\bin\Debug\sales.dacpac"
+    [System.IO.FileInfo] $WwiDacPacFile = "$PsScriptRoot/sql-server-samples/samples/databases/wide-world-importers/wwi-ssdt/wwi-ssdt/bin/Debug/WideWorldImporters.dacpac",
+    [System.IO.FileInfo] $MpsSalesDacPacFile = "$PSScriptRoot/multi-project-sample/sales/bin/Debug/sales.dacpac"
 )
 
 Describe New-Diagram {
