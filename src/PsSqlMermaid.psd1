@@ -51,7 +51,7 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    RequiredModules      = @( @{ ModuleName = 'PsMermaidTools'; ModuleVersion = '0.2.0' })
+    RequiredModules      = @( 'PsDac', @{ ModuleName = 'PsMermaidTools'; ModuleVersion = '0.2.0' })
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
@@ -95,13 +95,13 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags       = 'mermaid', 'sql', 'dac'
+            Tags         = 'mermaid', 'sql', 'dac'
 
             # A URL to the license for this module.
-            LicenseUri = 'https://github.com/abbgrade/PsSqlMermaid/blob/main/LICENSE'
+            LicenseUri   = 'https://github.com/abbgrade/PsSqlMermaid/blob/main/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/abbgrade/PsSqlMermaid'
+            ProjectUri   = 'https://github.com/abbgrade/PsSqlMermaid'
 
             # A URL to an icon representing this module.
             # IconUri = ''

@@ -1,6 +1,8 @@
 task InstallBuildDependencies -Jobs {
     Install-Module platyPs -Scope CurrentUser -AllowPrerelease -ErrorAction Stop
     Install-Module psdocker -Scope CurrentUser -AllowPrerelease -ErrorAction Stop
+    Install-Module PsMermaidTools -Scope CurrentUser -AllowPrerelease -ErrorAction Stop
+    Install-Module PsDac -Scope CurrentUser -AllowPrerelease -ErrorAction Stop
 }
 
 task InstallTestDependencies -Jobs {
@@ -11,5 +13,4 @@ task InstallTestDependencies -Jobs {
 }, Testdata.Create
 
 task InstallReleaseDependencies -Jobs {
-    Install-Module psdocker -Scope CurrentUser -ErrorAction Stop
 }
