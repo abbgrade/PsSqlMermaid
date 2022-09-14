@@ -1,28 +1,30 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.245.0/containers/docker-in-docker
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.245.2/containers/powershell
 {
-	"name": "Docker in Docker",
+	"name": "PowerShell",
 	"dockerFile": "Dockerfile",
-	"runArgs": ["--init", "--privileged"],
-	"mounts": ["source=dind-var-lib-docker,target=/var/lib/docker,type=volume"],
-	"overrideCommand": false,
 
 	// Configure tool-specific properties.
 	"customizations": {
 		// Configure properties specific to VS Code.
 		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": { 
+				"terminal.integrated.defaultProfile.linux": "pwsh"
+			},
+			
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"ms-azuretools.vscode-docker"
+				"ms-vscode.powershell"
 			]
 		}
 	},
-	
+
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "docker --version",
+	// Uncomment the next line to run commands after the container is created. This gets run in bash which is why we call `pwsh`.
+	// "postCreateCommand": "pwsh -c '$PSVersionTable'",
 
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode"
