@@ -10,7 +10,6 @@ Describe New-Diagram {
 
     BeforeAll {
         Import-Module $PSScriptRoot\..\src\PsSqlMermaid.psd1 -Force -ErrorAction Stop
-        Import-Module PsDac -ErrorAction Stop
     }
 
     Context wide-world-importers {
