@@ -1,6 +1,8 @@
 {
     "recommendations": [
         "vector-of-bool.gitflow",
-        "editorconfig.editorconfig"
+        "editorconfig.editorconfig",
+        "ms-vscode.powershell",
+        "eamodio.gitlens"
     ]
 }

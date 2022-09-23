@@ -26,9 +26,7 @@ See [the documentation](./Docs) for description and examples.
 
 ## Changelog
 
-### 0.1.0
-
-- Added `New-SqlMermaidDiagram` command.
+See the [changelog](./CHANGELOG.md) file.
 
 ## Development
 
@@ -38,6 +36,7 @@ See [the documentation](./Docs) for description and examples.
 - Test automation is based on [Pester](https://pester.dev)
 - Commands are named based on [Approved Verbs for PowerShell Commands](https://docs.microsoft.com/de-de/powershell/scripting/developer/cmdlet/approved-verbs-for-windows-powershell-commands)
 - This project uses [git-flow](https://github.com/nvie/gitflow).
+- This project uses [keep a changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Build
 

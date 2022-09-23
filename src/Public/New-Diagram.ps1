@@ -31,17 +31,8 @@ function New-Diagram {
         $SchemaSeparator = '-'
     )
 
-    begin {
-        $relationStrings = @{
-            ZeroOrOne  = '|o', 'o|'
-            ExactlyOne = '||', '||'
-            ZeroOrMore = '}o', 'o{'
-            OneOrMore  = '}|', '|{'
-        }
-    }
-
     process {
-        $lines = @('erDiagram')
+        $diagram = New-MermaidDiagram -Type erDiagram
 
         $includedTables = $()
 
@@ -53,12 +44,11 @@ function New-Diagram {
                 $targetSchemaName, $targetTableName = $targetTable.Name.Parts
                 $keySchemaName, $keyName = $_.Name.Parts
 
-
-                $relationString = $relationStrings.ZeroOrMore[0] + '--' + $relationStrings.ZeroOrOne[1]
                 $sourceTableString = "$sourceSchemaName$SchemaSeparator$sourceTableName"
                 $targetTableString = "$targetSchemaName$SchemaSeparator$targetTableName"
 
-                $lines += "    $sourceTableString $relationString $targetTableString : $keyName"
+                $diagram | Add-MermaidRelation Zero-or-one $sourceTableString $PSItem.Name.Parts[1] Zero-or-more $targetTableString
+
                 $includedTables += $sourceTable, $targetTable | ForEach-Object { $_.Name.ToString() }
             }
             else {
@@ -73,10 +63,10 @@ function New-Diagram {
         } | ForEach-Object {
             $schemaName, $tableName = $_.Name.Parts
             $tableString = "$schemaName$SchemaSeparator$tableName"
-            $lines += "    $tableString"
+            $diagram | Add-MermaidRelation -Entity $tableString
         }
 
-        $lines -join "`r`n" | Write-Output
+        $diagram | ConvertTo-MermaidString | Write-Output
     }
 
 }

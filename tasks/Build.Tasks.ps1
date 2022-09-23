@@ -1,19 +1,25 @@
 requires ModuleName
 
-[System.IO.DirectoryInfo] $SourceDirectory = "$PsScriptRoot\..\Source"
-[System.IO.DirectoryInfo] $SourceManifest = "$SourceDirectory\$ModuleName.psd1"
-[System.IO.DirectoryInfo] $PublishDirectory = "$PsScriptRoot\..\publish"
-[System.IO.DirectoryInfo] $DocumentationDirectory = "$PsScriptRoot\..\Docs"
-[System.IO.DirectoryInfo] $ModulePublishDirectory = "$PublishDirectory\$ModuleName"
+[System.IO.DirectoryInfo] $SourceDirectory = "$PsScriptRoot/../src"
+[System.IO.DirectoryInfo] $SourceManifest = "$SourceDirectory/$ModuleName.psd1"
+[System.IO.DirectoryInfo] $PublishDirectory = "$PsScriptRoot/../publish"
+[System.IO.DirectoryInfo] $DocumentationDirectory = "$PsScriptRoot/../docs"
+[System.IO.DirectoryInfo] $ModulePublishDirectory = "$PublishDirectory/$ModuleName"
 
 # Synopsis: Remove all temporary files.
 task Clean -Jobs {
-	remove $PublishDirectory, $DocumentationDirectory
+	remove $PublishDirectory
+	$DocumentationDirectory | Get-ChildItem -Exclude index.md, _config.yml | Remove-item
 }
 
 # Synopsis: Import the module.
 task Import -Jobs {
     Import-Module $SourceManifest -Force
+}
+
+# Synopsis: Import platyPs.
+task Import.platyPs -Jobs {
+	Import-Module platyPs
 }
 
 # Synopsis: Initialize the documentation directory.
@@ -22,12 +28,12 @@ task Doc.Init.Directory -If { $DocumentationDirectory.Exists -eq $false} -Jobs {
 }
 
 # Synopsis: Initialize the documentation.
-task Doc.Init -Jobs Import, Doc.Init.Directory, {
+task Doc.Init -Jobs Import, Import.platyPs, Doc.Init.Directory, {
     New-MarkdownHelp -Module $ModuleName -OutputFolder $DocumentationDirectory -Force:$ForceDocInit -ErrorAction Continue
 }
 
 # Synopsis: Update the markdown documentation.
-task Doc.Update -Jobs Import, Doc.Init, {
+task Doc.Update -Jobs Import, Import.platyPs, Doc.Init, {
     Update-MarkdownHelp -Path $DocumentationDirectory
 }
 
@@ -44,7 +50,7 @@ task SetPrerelease -If $BuildNumber {
 # Synopsis: Build the module.
 task Build -Jobs Clean, Doc.Update, PreparePublishDirectory, {
 	Copy-Item -Path $SourceDirectory -Destination $ModulePublishDirectory -Recurse
-    [System.IO.FileInfo] $Global:Manifest = "$ModulePublishDirectory\$ModuleName.psd1"
+    [System.IO.FileInfo] $Global:Manifest = "$ModulePublishDirectory/$ModuleName.psd1"
 }, SetPrerelease
 
 # Synopsis: Install the module.
