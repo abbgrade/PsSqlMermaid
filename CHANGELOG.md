@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Used PsMermaidTools to generate mermaid diagram.
 
+### Fixed
+
+- Changed cardinality from foreign keys.
+
 ## [0.1.0] - 2022-03-14
 
 ### Added
