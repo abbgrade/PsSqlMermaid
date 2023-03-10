@@ -32,7 +32,7 @@ function New-Diagram {
     )
 
     process {
-        $diagram = New-MermaidDiagram -Type erDiagram
+        $diagram = New-MermaidDiagram -erDiagram
 
         $includedTables = $()
 
