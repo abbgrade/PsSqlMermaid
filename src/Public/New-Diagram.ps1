@@ -32,7 +32,7 @@ function New-Diagram {
     )
 
     process {
-        $diagram = New-MermaidDiagram -erDiagram
+        $diagram = New-MermaidDiagram -ErDiagram
 
         $includedTables = $()
 
@@ -47,7 +47,7 @@ function New-Diagram {
                 $sourceTableString = "$sourceSchemaName$SchemaSeparator$sourceTableName"
                 $targetTableString = "$targetSchemaName$SchemaSeparator$targetTableName"
 
-                $diagram | Add-MermaidRelation Zero-or-one $sourceTableString $PSItem.Name.Parts[1] Zero-or-more $targetTableString
+                $diagram | Add-MermaidErRelation Zero-or-one $sourceTableString $PSItem.Name.Parts[1] Zero-or-more $targetTableString
 
                 $includedTables += $sourceTable, $targetTable | ForEach-Object { $_.Name.ToString() }
             }
@@ -63,7 +63,7 @@ function New-Diagram {
         } | ForEach-Object {
             $schemaName, $tableName = $_.Name.Parts
             $tableString = "$schemaName$SchemaSeparator$tableName"
-            $diagram | Add-MermaidRelation -Entity $tableString
+            $diagram | Add-MermaidErRelation -Entity $tableString
         }
 
         $diagram | ConvertTo-MermaidString | Write-Output

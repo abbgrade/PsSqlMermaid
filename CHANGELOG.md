@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Updated to current PsMermaidTools version.
+
 ## [0.2.0] - 2022-09-23
 
 ### Changed
@@ -22,3 +26,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added `New-SqlMermaidDiagram` command.
+
+<!-- markdownlint-configure-file {"MD024": { "siblings_only": true } } -->
