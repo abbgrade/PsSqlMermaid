@@ -32,7 +32,7 @@ $ModuleName = 'PsSqlMermaid'
 
 . $PsScriptRoot\tasks\Build.Tasks.ps1
 . $PSScriptRoot\tasks\Dependencies.Tasks.ps1
-. $PSScriptRoot\tasks\PsBuild.Tasks
+. $PSScriptRoot\tasks\PsBuild.Tasks.ps1
 . $PSScriptRoot\tasks\Testdata.Tasks.ps1
 
 # Synopsis: Default task.

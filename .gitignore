@@ -1,7 +1,1 @@
 publish
-.vs
-obj
-bin
-*.user
-*.jfm
-*dbmdl

@@ -12,7 +12,7 @@
     RootModule           = 'PsSqlMermaid.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.2.0'
+    ModuleVersion        = '0.3.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -51,7 +51,7 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    RequiredModules      = @( 'PsDac', @{ ModuleName = 'PsMermaidTools'; ModuleVersion = '0.2.0' })
+    RequiredModules      = @( 'PsDac', @{ ModuleName = 'PsMermaidTools'; ModuleVersion = '0.3.0' })
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
@@ -69,16 +69,16 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport    = '*'
+    FunctionsToExport = '*'
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport      = 'New-Diagram'
+    CmdletsToExport = '*'
 
     # Variables to export from this module
-    # VariablesToExport = @()
+    VariablesToExport = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport      = '*'
+    AliasesToExport = '*'
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -101,7 +101,7 @@
             LicenseUri   = 'https://github.com/abbgrade/PsSqlMermaid/blob/main/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri   = 'https://github.com/abbgrade/PsSqlMermaid'
+            ProjectUri   = 'https://abbgrade.github.io/PsSqlMermaid/'
 
             # A URL to an icon representing this module.
             # IconUri = ''

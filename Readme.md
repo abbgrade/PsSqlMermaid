@@ -22,7 +22,7 @@ Invoke-Build Install
 
 ## Usage
 
-See [the documentation](./Docs) for description and examples.
+See [the command reference](./docs/) for descriptions and examples.
 
 ## Changelog
 
