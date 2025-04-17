@@ -21,8 +21,10 @@ function New-Diagram {
 
         # Specifies the database model.
         [Parameter(
+            Mandatory,
             ValueFromPipeline
         )]
+        [ValidateNotNullOrEmpty()]
         # [Microsoft.SqlServer.Dac.Model.TSqlModel]
         $DacModel,
 
@@ -32,38 +34,29 @@ function New-Diagram {
     )
 
     process {
-        $diagram = New-MermaidDiagram -ErDiagram
+        $diagram = New-MermaidDiagram -ErDiagram -Config @{ layout = 'elk'}
 
-        $includedTables = $()
+        $DacModel | Get-DacTable | ForEach-Object {
+            $tableString = Get-TableString -NameParts $_.Name.Parts -SchemaSeparator:$SchemaSeparator
+            $_ | Get-DacColumn | ForEach-Object {
+                $diagram | Add-MermaidErAttribute -Entity $tableString -Name $_.Name.Parts[2] -Type Any
+            }
+        }
 
         $DacModel | Get-DacForeignKey | ForEach-Object {
             $sourceTable, $targetTable = $_.GetReferenced() | Where-Object { $_.ObjectType.Name -eq 'Table' }
 
             if ( $targetTable ) {
-                $sourceSchemaName, $sourceTableName = $sourceTable.Name.Parts
-                $targetSchemaName, $targetTableName = $targetTable.Name.Parts
-                $keySchemaName, $keyName = $_.Name.Parts
+                # $keySchemaName, $keyName = $_.Name.Parts
 
-                $sourceTableString = "$sourceSchemaName$SchemaSeparator$sourceTableName"
-                $targetTableString = "$targetSchemaName$SchemaSeparator$targetTableName"
+                $sourceTableString = Get-TableString -NameParts $sourceTable.Name.Parts -SchemaSeparator:$SchemaSeparator
+                $targetTableString = Get-TableString -NameParts $targetTable.Name.Parts -SchemaSeparator:$SchemaSeparator
 
                 $diagram | Add-MermaidErRelation Zero-or-one $sourceTableString $PSItem.Name.Parts[1] Zero-or-more $targetTableString
-
-                $includedTables += $sourceTable, $targetTable | ForEach-Object { $_.Name.ToString() }
             }
             else {
                 Write-Verbose "Exclude $( $_.Name ). Foreign table was not found."
             }
-        }
-
-        $includedTables = $includedTables | Select-Object -Unique
-
-        $DacModel | Get-DacTable | Where-Object {
-            -Not ( $includedTables -contains $_.Name.ToString() )
-        } | ForEach-Object {
-            $schemaName, $tableName = $_.Name.Parts
-            $tableString = "$schemaName$SchemaSeparator$tableName"
-            $diagram | Add-MermaidErRelation -Entity $tableString
         }
 
         $diagram | ConvertTo-MermaidString | Write-Output
